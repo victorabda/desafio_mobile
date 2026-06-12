@@ -8,6 +8,8 @@
 import Foundation
 import SwiftData
 
+/// Persistence boundary for the logged user (the challenge's offline-storage
+/// requirement, implemented with SwiftData instead of WatermelonDB).
 protocol UserRepository {
     func saveLoggedUser(_ user: AuthenticatedUser) async throws
     func loggedUser() async throws -> AuthenticatedUser?
@@ -22,6 +24,8 @@ final class SwiftDataUserRepository: UserRepository {
         self.modelContext = modelContext
     }
 
+    /// Upsert keyed by the auth provider's user id: signing in again with the
+    /// same account refreshes the row instead of accumulating duplicates.
     func saveLoggedUser(_ user: AuthenticatedUser) async throws {
         let userId = user.id
         let descriptor = FetchDescriptor<LoggedUserEntity>(
@@ -43,6 +47,8 @@ final class SwiftDataUserRepository: UserRepository {
         try modelContext.save()
     }
 
+    /// Most recent login wins if more than one row ever exists, making
+    /// session restoration deterministic.
     func loggedUser() async throws -> AuthenticatedUser? {
         let descriptor = FetchDescriptor<LoggedUserEntity>(
             sortBy: [SortDescriptor(\.loggedAt, order: .reverse)]

@@ -32,12 +32,28 @@ final class MockUserRepository: UserRepository {
 @MainActor
 final class MockLocationRepository: LocationRepository {
     var saveError: Error?
+    var deleteError: Error?
+    var fetchLastLocationResult: Result<UserLocation?, Error> = .success(nil)
     private(set) var savedLocations: [UserLocation] = []
+    private(set) var fetchLastLocationCallCount = 0
+    private(set) var deleteCallCount = 0
 
     func saveLastLocation(_ location: UserLocation) async throws {
         if let saveError {
             throw saveError
         }
         savedLocations.append(location)
+    }
+
+    func fetchLastLocation() async throws -> UserLocation? {
+        fetchLastLocationCallCount += 1
+        return try fetchLastLocationResult.get()
+    }
+
+    func deleteLastLocation() async throws {
+        deleteCallCount += 1
+        if let deleteError {
+            throw deleteError
+        }
     }
 }

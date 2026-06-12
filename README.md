@@ -31,14 +31,18 @@ The app authenticates users with Firebase Authentication, displays their current
 - Success events sent to Firebase Analytics.
 - Non-fatal error reporting with Firebase Crashlytics.
 - Unit tests with Swift Testing and UI/E2E tests with XCUITest.
-- English and Brazilian Portuguese localization, including the location permission message.
 
 ### Additional features beyond the briefing
 
+- Full localization in English and Brazilian Portuguese (string catalog), including the system location-permission message.
 - Restores the persisted session when the app is reopened.
-- Secure logout with confirmation and local-session removal.
+- Offline fallback: when GPS fails or permission is denied, the map shows the last persisted location with a banner indicating the data may be outdated and a context-aware recovery action (retry or open Settings).
+- Secure logout with confirmation, removing the local session and the persisted last location (personal data does not outlive the session).
 - Dedicated explanation screen when location access is denied.
-- Shortcut to the app's Settings page to enable location permission.
+- Shortcut to the app's Settings page, with automatic retry when the app returns to the foreground.
+- Full dark mode support with a semantic color palette (asset-catalog light/dark variants: the blue accent shifts to teal in dark mode for better contrast over the dark map).
+- Custom app icon with dark and tinted variants for the iOS appearance modes.
+- Layout adapted for iPad and large screens (regular size class), with a dedicated two-column login layout.
 - Recenter button displayed after the user moves the map.
 - Password visibility control on the login screen.
 - Explicit loading, permission-denied, and error states.
@@ -47,7 +51,8 @@ The app authenticates users with Firebase Authentication, displays their current
 
 ### Requirements and setup
 
-- macOS with an Xcode version compatible with iOS 17.6 or later.
+- macOS with **Xcode 26 or later** — the build settings rely on Swift 6.2 features (default `MainActor` isolation, approachable concurrency).
+- The app runs on **iOS 17.0 or later** (same deployment target for the app and test targets).
 - Swift Package Manager enabled.
 - An iOS Simulator or physical device.
 
@@ -109,9 +114,11 @@ Authentication, session restoration, location loading, persistence, and logout f
 
 ### Tests
 
-Unit tests cover credential validation, authentication success and failure, persistence, global session updates, Analytics events, Crashlytics reporting, location states, and logout.
+Unit tests cover credential validation, authentication success and failure, persistence (including upsert and last-location fallback reads), global session updates, Analytics events, Crashlytics reporting, location states with stale-location fallback, and logout. The CoreLocation bridge is tested through an injected `LocationManaging` seam, including authorization flow, error mapping, and coalescing of concurrent location requests into a single in-flight GPS read.
 
 UI/E2E tests cover login validation, password visibility, successful and failed login, session restoration, Home loading, denied location permission, location failure, logout, and an English-localization smoke test.
+
+The shared scheme runs through a test plan with code coverage enabled for the app target.
 
 Run them with `Command + U` or:
 
@@ -138,14 +145,18 @@ O app autentica usuários com Firebase Authentication, exibe a localização atu
 - Eventos de sucesso enviados ao Firebase Analytics.
 - Registro de erros não fatais com Firebase Crashlytics.
 - Testes unitários com Swift Testing e testes UI/E2E com XCUITest.
-- Localização em inglês e português do Brasil, incluindo a mensagem de permissão de localização.
 
 ### Funcionalidades adicionais além do briefing
 
+- Localização completa em inglês e português do Brasil (string catalog), incluindo a mensagem de permissão de localização do sistema.
 - Restauração da sessão persistida ao reabrir o aplicativo.
-- Logout seguro com confirmação e remoção da sessão local.
+- Fallback offline: quando o GPS falha ou a permissão é negada, o mapa exibe a última localização persistida com um banner indicando que o dado pode estar desatualizado e uma ação de recuperação adequada ao contexto (tentar novamente ou abrir os Ajustes).
+- Logout seguro com confirmação, removendo a sessão local e a última localização persistida (dados pessoais não sobrevivem à sessão).
 - Tela dedicada para explicar a necessidade da localização quando a permissão é negada.
-- Atalho para os Ajustes do aplicativo para habilitar a permissão de localização.
+- Atalho para os Ajustes do aplicativo, com nova tentativa automática quando o app volta ao primeiro plano.
+- Suporte completo a dark mode com paleta de cores semântica (variantes light/dark no asset catalog: o acento azul muda para teal no modo escuro, com melhor contraste sobre o mapa escuro).
+- Ícone do aplicativo personalizado com variantes dark e tinted para os modos de aparência do iOS.
+- Layout adaptado para iPad e telas grandes (size class regular), com login em duas colunas.
 - Botão para recentralizar o mapa exibido após o usuário movimentá-lo.
 - Controle para exibir ou ocultar a senha na tela de login.
 - Estados explícitos de carregamento, permissão negada e erro.
@@ -154,7 +165,8 @@ O app autentica usuários com Firebase Authentication, exibe a localização atu
 
 ### Requisitos e execução
 
-- macOS com uma versão do Xcode compatível com iOS 17.6 ou superior.
+- macOS com **Xcode 26 ou superior** — os build settings utilizam recursos do Swift 6.2 (isolamento `MainActor` por padrão, approachable concurrency).
+- O aplicativo roda em **iOS 17.0 ou superior** (mesmo deployment target para o app e os targets de teste).
 - Swift Package Manager habilitado.
 - Um simulador iOS ou dispositivo físico.
 
@@ -216,9 +228,11 @@ Falhas de autenticação, restauração da sessão, carregamento da localizaçã
 
 ### Testes
 
-Os testes unitários cobrem validação das credenciais, sucesso e falha de autenticação, persistência, atualização da sessão global, eventos de Analytics, registros no Crashlytics, estados de localização e logout.
+Os testes unitários cobrem validação das credenciais, sucesso e falha de autenticação, persistência (incluindo upsert e leitura da última localização para o fallback), atualização da sessão global, eventos de Analytics, registros no Crashlytics, estados de localização com fallback de localização desatualizada e logout. A ponte com o CoreLocation é testada por meio de um seam injetável (`LocationManaging`), incluindo o fluxo de autorização, o mapeamento de erros e a unificação de requisições concorrentes em uma única leitura de GPS em andamento.
 
 Os testes UI/E2E cobrem validação do login, visibilidade da senha, login com sucesso e falha, restauração da sessão, carregamento da Home, permissão de localização negada, falha de localização, logout e um smoke test da localização em inglês.
+
+O scheme compartilhado executa por meio de um test plan com code coverage habilitado para o target do app.
 
 Execute com `Command + U` ou:
 
@@ -228,3 +242,39 @@ xcodebuild test \
   -scheme ByCodersChallenge \
   -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
+
+---
+
+## Screenshots / Capturas de tela
+
+### iPhone
+
+<p align="center">
+  <img src="Screenshots/screen-1.jpg" alt="iPhone login screen" width="30%">
+  <img src="Screenshots/screen-2.jpg" alt="iPhone home map screen" width="30%">
+  <img src="Screenshots/screen-3.jpg" alt="iPhone location permission screen" width="30%">
+</p>
+
+### iPhone (Dark Mode)
+
+<p align="center">
+  <img src="Screenshots/dark-screen-1.jpg" alt="iPhone dark mode login screen" width="30%">
+  <img src="Screenshots/dark-screen-2.jpg" alt="iPhone dark mode home map screen" width="30%">
+  <img src="Screenshots/dark-screen-3.jpg" alt="iPhone dark mode location permission screen" width="30%">
+</p>
+
+### iPad (Portrait)
+
+<p align="center">
+  <img src="Screenshots/ipad-portrait-1.jpg" alt="iPad portrait login screen" width="30%">
+  <img src="Screenshots/ipad-portrait-2.jpg" alt="iPad portrait home map screen" width="30%">
+  <img src="Screenshots/ipad-portrait-3.jpg" alt="iPad portrait location permission screen" width="30%">
+</p>
+
+### iPad (Landscape)
+
+<p align="center">
+  <img src="Screenshots/ipad-landscape-1.jpg" alt="iPad landscape login screen" width="30%">
+  <img src="Screenshots/ipad-landscape-2.jpg" alt="iPad landscape home map screen" width="30%">
+  <img src="Screenshots/ipad-landscape-3.jpg" alt="iPad landscape location permission screen" width="30%">
+</p>

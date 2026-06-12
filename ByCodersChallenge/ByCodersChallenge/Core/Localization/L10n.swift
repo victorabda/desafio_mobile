@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// Strings that ViewModels expose as plain `String` (e.g. error messages).
+/// Views use string-catalog keys directly; this exists so ViewModels stay
+/// free of `LocalizedStringKey`/SwiftUI imports.
 enum L10n {
     static var genericUser: String {
         String(localized: "common.user")

@@ -14,6 +14,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        // UI test scenarios run fully offline against fakes, so Firebase is
+        // only configured for real (and unit-test) launches.
         if UITestScenario.current == nil {
             FirebaseApp.configure()
         }

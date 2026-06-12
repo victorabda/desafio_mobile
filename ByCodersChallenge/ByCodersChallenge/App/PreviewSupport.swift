@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Factories backing `#Preview` blocks with lightweight in-memory fakes, so
+/// previews render instantly without touching Firebase or Core Location.
 @MainActor
 enum PreviewFactory {
     static func makeLoginViewModel() -> LoginViewModel {
@@ -20,6 +22,16 @@ enum PreviewFactory {
     }
 
     static func makeHomeViewModel() -> HomeViewModel {
+        makeHomeViewModel(locationService: PreviewLocationService())
+    }
+
+    static func makePermissionDeniedHomeViewModel() -> HomeViewModel {
+        makeHomeViewModel(locationService: PreviewPermissionDeniedLocationService())
+    }
+
+    private static func makeHomeViewModel(
+        locationService: LocationService
+    ) -> HomeViewModel {
         let session = AppSession()
         session.setLoggedInUser(AuthenticatedUser(
             id: "preview-user",
@@ -29,7 +41,7 @@ enum PreviewFactory {
 
         return HomeViewModel(
             authService: PreviewAuthService(),
-            locationService: PreviewLocationService(),
+            locationService: locationService,
             locationRepository: PreviewLocationRepository(),
             analyticsService: PreviewAnalyticsService(),
             crashlyticsService: PreviewCrashlyticsService(),
@@ -63,6 +75,8 @@ private struct PreviewUserRepository: UserRepository {
 
 private struct PreviewLocationRepository: LocationRepository {
     func saveLastLocation(_ location: UserLocation) async throws {}
+    func fetchLastLocation() async throws -> UserLocation? { nil }
+    func deleteLastLocation() async throws {}
 }
 
 private struct PreviewLocationService: LocationService {
@@ -70,5 +84,13 @@ private struct PreviewLocationService: LocationService {
 
     func currentLocation() async throws -> UserLocation {
         UserLocation(latitude: -23.5505, longitude: -46.6333)
+    }
+}
+
+private struct PreviewPermissionDeniedLocationService: LocationService {
+    func requestAuthorization() async {}
+
+    func currentLocation() async throws -> UserLocation {
+        throw LocationError.permissionDenied
     }
 }

@@ -7,6 +7,10 @@
 
 import SwiftData
 
+/// Composition root: owns every service/repository instance and wires them
+/// into ViewModels. Dependencies are held as protocols, so the whole graph
+/// can be swapped at a single point — Firebase + Core Location in production,
+/// deterministic fakes when a UI test scenario is detected at launch.
 @MainActor
 final class AppContainer {
     let modelContainer: ModelContainer
@@ -41,7 +45,7 @@ final class AppContainer {
             crashlyticsService = UITestCrashlyticsService()
             locationService = UITestLocationService(result: scenario.locationResult)
             userRepository = UITestUserRepository(user: loggedUser)
-            locationRepository = UITestLocationRepository()
+            locationRepository = UITestLocationRepository(savedLocation: scenario.savedLocation)
         } else {
             authService = FirebaseAuthService()
             analyticsService = FirebaseAnalyticsService()
@@ -52,6 +56,7 @@ final class AppContainer {
         }
     }
 
+    /// Memberwise initializer used by unit tests to inject mocks directly.
     init(
         modelContainer: ModelContainer,
         session: AppSession,
@@ -94,6 +99,9 @@ final class AppContainer {
         )
     }
 
+    /// Resolves the initial `AuthState` from the persisted user, exactly once
+    /// per launch. Any persistence failure is reported and falls back to the
+    /// logged-out state so the app never gets stuck on the restoring screen.
     func restoreSession() async {
         guard !didRestoreSession else { return }
         didRestoreSession = true
@@ -117,7 +125,8 @@ final class AppContainer {
 private extension UITestScenario {
     var startsOnHome: Bool {
         switch self {
-        case .homeSuccess, .homePermissionDenied, .homeFailure:
+        case .homeSuccess, .homePermissionDenied, .homeFailure,
+             .homeStaleLocationPermissionDenied, .homeStaleLocationUnavailable:
             true
         case .loginSuccess, .loginFailure:
             false
@@ -126,12 +135,24 @@ private extension UITestScenario {
 
     var locationResult: UITestLocationService.Result {
         switch self {
-        case .homePermissionDenied:
+        case .homePermissionDenied, .homeStaleLocationPermissionDenied:
             .permissionDenied
-        case .homeFailure:
+        case .homeFailure, .homeStaleLocationUnavailable:
             .failure
         case .loginSuccess, .loginFailure, .homeSuccess:
             .success
+        }
+    }
+
+    /// Pre-seeded location for scenarios that exercise the stale-location
+    /// fallback. Returns `nil` for every other scenario so the repository
+    /// behaves as if no location has ever been saved.
+    var savedLocation: UserLocation? {
+        switch self {
+        case .homeStaleLocationPermissionDenied, .homeStaleLocationUnavailable:
+            UserLocation(latitude: -23.5505, longitude: -46.6333)
+        default:
+            nil
         }
     }
 }

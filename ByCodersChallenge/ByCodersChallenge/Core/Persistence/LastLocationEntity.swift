@@ -8,6 +8,8 @@
 import SwiftData
 import Foundation
 
+/// SwiftData row for the last known map position — kept as a single record
+/// (upserted on every fix) and read back as the offline/stale fallback.
 @Model
 final class LastLocationEntity {
     var latitude: Double

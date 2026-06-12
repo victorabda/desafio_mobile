@@ -8,48 +8,71 @@
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @StateObject var viewModel: LoginViewModel
     @State private var isPasswordVisible = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 32) {
-                    hero
-                    loginCard
-                    privacyNote
-                }
-                .frame(maxWidth: 560)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 32)
-                .frame(maxWidth: .infinity)
+                VStack(spacing: isRegularWidth ? 48 : 32) {
+                    if isRegularWidth {
+                        HStack(alignment: .center, spacing: 64) {
+                            VStack(spacing: 32) {
+                                hero
+                                privacyNote
+                            }
+                            .frame(maxWidth: 420)
 
-                copyrightNote
+                            loginCard
+                                .frame(maxWidth: 520)
+                        }
+                    } else {
+                        VStack(spacing: 32) {
+                            hero
+                            loginCard
+                            privacyNote
+                        }
+                    }
+
+                    copyrightNote
+                }
+                .frame(maxWidth: isRegularWidth ? 1080 : 560)
+                .padding(.horizontal, isRegularWidth ? 48 : 24)
+                .padding(.vertical, isRegularWidth ? 64 : 32)
+                .frame(maxWidth: .infinity)
             }
             .background(background)
             .scrollDismissesKeyboard(.interactively)
         }
     }
 
+    private var isRegularWidth: Bool {
+        horizontalSizeClass == .regular
+    }
+
     private var hero: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: isRegularWidth ? 24 : 16) {
             ZStack {
                 Circle()
-                    .fill(.blue.opacity(0.12))
-                    .frame(width: 112, height: 112)
+                    .fill(Color.brandPrimary.opacity(0.12))
+                    .frame(
+                        width: isRegularWidth ? 168 : 112,
+                        height: isRegularWidth ? 168 : 112
+                    )
 
                 Image(systemName: "map.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.blue)
+                    .font(.system(size: isRegularWidth ? 72 : 48))
+                    .foregroundStyle(.brandPrimary)
             }
 
-            VStack(spacing: 8) {
+            VStack(spacing: isRegularWidth ? 12 : 8) {
                 Text("login.title")
-                    .font(.largeTitle.bold())
+                    .font(isRegularWidth ? .system(size: 46, weight: .bold) : .largeTitle.bold())
                     .multilineTextAlignment(.center)
 
                 Text("login.description")
-                    .font(.subheadline)
+                    .font(isRegularWidth ? .title3 : .subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -58,20 +81,20 @@ struct LoginView: View {
     }
 
     private var loginCard: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: isRegularWidth ? 28 : 20) {
+            VStack(alignment: .leading, spacing: isRegularWidth ? 8 : 4) {
                 Text("login.welcome")
-                    .font(.title2.bold())
+                    .font(isRegularWidth ? .title.bold() : .title2.bold())
 
                 Text("login.instructions")
-                    .font(.subheadline)
+                    .font(isRegularWidth ? .body : .subheadline)
                     .foregroundStyle(.secondary)
             }
 
-            VStack(spacing: 14) {
+            VStack(spacing: isRegularWidth ? 18 : 14) {
                 fieldContainer {
                     Image(systemName: "envelope.fill")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.brandPrimary)
 
                     TextField("login.email", text: $viewModel.email)
                         .keyboardType(.emailAddress)
@@ -83,7 +106,7 @@ struct LoginView: View {
 
                 fieldContainer {
                     Image(systemName: "lock.fill")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.brandPrimary)
 
                     Group {
                         if isPasswordVisible {
@@ -115,7 +138,7 @@ struct LoginView: View {
 
             if let errorMessage = viewModel.errorMessage {
                 Label(errorMessage, systemImage: "exclamationmark.circle.fill")
-                    .font(.subheadline)
+                    .font(isRegularWidth ? .body : .subheadline)
                     .foregroundStyle(.red)
                     .accessibilityIdentifier("login_error_text")
             }
@@ -134,6 +157,7 @@ struct LoginView: View {
                         Image(systemName: "arrow.right")
                     }
                 }
+                .font(isRegularWidth ? .headline : .body)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
             }
@@ -142,46 +166,46 @@ struct LoginView: View {
             .disabled(!viewModel.isLoginButtonEnabled)
             .accessibilityIdentifier("login_button")
         }
-        .padding(22)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .padding(isRegularWidth ? 32 : 22)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: isRegularWidth ? 30 : 24))
         .overlay {
-            RoundedRectangle(cornerRadius: 24)
+            RoundedRectangle(cornerRadius: isRegularWidth ? 30 : 24)
                 .stroke(.primary.opacity(0.08))
         }
     }
 
     private var privacyNote: some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: isRegularWidth ? 16 : 12) {
             Image(systemName: "lock.shield.fill")
-                .font(.system(size: 24))
-                .foregroundStyle(.blue)
+                .font(.system(size: isRegularWidth ? 36 : 24))
+                .foregroundStyle(.brandPrimary)
 
             Text("login.privacy")
-                .font(.caption)
+                .font(isRegularWidth ? .body : .caption)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .center)
     }
 
     private var copyrightNote: some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: isRegularWidth ? 16 : 12) {
             Image(systemName: "figure.wave.circle.fill")
-                .font(.system(size: 32))
-                .foregroundStyle(.black)
+                .font(.system(size: isRegularWidth ? 40 : 32))
+                .foregroundStyle(.primary)
 
             Text("login.copyright")
-                .font(.footnote)
+                .font(isRegularWidth ? .body : .footnote)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .padding(.horizontal, 16)
-        .padding(.top, 24)
+        .padding(.top, isRegularWidth ? 32 : 0)
     }
 
     private var background: some View {
         LinearGradient(
             colors: [
-                Color.blue.opacity(0.10),
+                Color.brandPrimary.opacity(0.10),
                 Color(.systemBackground),
                 Color(.systemBackground)
             ],
@@ -194,14 +218,15 @@ struct LoginView: View {
     private func fieldContainer<Content: View>(
         @ViewBuilder content: () -> Content
     ) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: isRegularWidth ? 16 : 12) {
             content()
         }
-        .padding(.horizontal, 14)
-        .frame(minHeight: 52)
-        .background(.background, in: RoundedRectangle(cornerRadius: 14))
+        .font(isRegularWidth ? .body : .callout)
+        .padding(.horizontal, isRegularWidth ? 18 : 14)
+        .frame(minHeight: isRegularWidth ? 62 : 52)
+        .background(.background, in: RoundedRectangle(cornerRadius: isRegularWidth ? 18 : 14))
         .overlay {
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: isRegularWidth ? 18 : 14)
                 .stroke(.primary.opacity(0.12))
         }
     }
@@ -209,4 +234,9 @@ struct LoginView: View {
 
 #Preview("Login") {
     LoginView(viewModel: PreviewFactory.makeLoginViewModel())
+}
+
+#Preview("Login - iPad", traits: .fixedLayout(width: 1180, height: 820)) {
+    LoginView(viewModel: PreviewFactory.makeLoginViewModel())
+        .environment(\.horizontalSizeClass, .regular)
 }

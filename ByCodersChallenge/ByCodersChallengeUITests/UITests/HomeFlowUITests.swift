@@ -32,6 +32,26 @@ final class HomeFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Tentar novamente"].exists)
     }
 
+    func testStaleLocationFromPermissionDeniedShowsMapWithSettingsBannerAction() {
+        app.launch(scenario: "-ui-testing-home-stale-permission-denied")
+
+        XCTAssertTrue(app.element(identifier: "home_map").waitForExistence(timeout: 5))
+        XCTAssertTrue(app.element(identifier: "home_stale_location_banner").waitForExistence(timeout: 2))
+        XCTAssertTrue(app.element(identifier: "home_stale_open_settings_button").waitForExistence(timeout: 2))
+        XCTAssertFalse(app.element(identifier: "home_stale_retry_button").exists)
+        XCTAssertFalse(app.element(identifier: "home_open_settings_button").exists)
+    }
+
+    func testStaleLocationFromUnavailableShowsMapWithRetryBannerAction() {
+        app.launch(scenario: "-ui-testing-home-stale-unavailable")
+
+        XCTAssertTrue(app.element(identifier: "home_map").waitForExistence(timeout: 5))
+        XCTAssertTrue(app.element(identifier: "home_stale_location_banner").waitForExistence(timeout: 2))
+        XCTAssertTrue(app.element(identifier: "home_stale_retry_button").waitForExistence(timeout: 2))
+        XCTAssertFalse(app.element(identifier: "home_stale_open_settings_button").exists)
+        XCTAssertFalse(app.element(identifier: "home_open_settings_button").exists)
+    }
+
     func testLogoutReturnsToLogin() {
         app.launch(scenario: "-ui-testing-home-success")
 

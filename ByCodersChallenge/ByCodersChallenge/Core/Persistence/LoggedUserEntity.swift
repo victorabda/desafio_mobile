@@ -8,6 +8,8 @@
 import SwiftData
 import Foundation
 
+/// SwiftData row for the authenticated user, keyed by the auth provider's id
+/// so repeated logins update in place. `loggedAt` orders session restoration.
 @Model
 final class LoggedUserEntity {
     @Attribute(.unique) var id: String

@@ -7,6 +7,9 @@
 
 import Combine
 
+/// Global session store (the challenge's "store to manage global states").
+/// Single source of truth for authentication: ViewModels mutate it through
+/// the explicit setters and SwiftUI reacts to `authState` changes.
 @MainActor
 final class AppSession: ObservableObject {
     @Published private(set) var authState: AuthState = .restoring

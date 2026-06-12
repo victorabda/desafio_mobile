@@ -1,3 +1,5 @@
+
+import Foundation
 import SwiftData
 import Testing
 @testable import ByCodersChallenge
@@ -93,6 +95,86 @@ struct RepositoryTests {
         #expect(entities.count == 1)
         #expect(entities.first?.latitude == latest.latitude)
         #expect(entities.first?.longitude == latest.longitude)
+    }
+
+    @Test
+    func locationRepositoryRefreshesTimestampWhenUpdatingExistingLocation() async throws {
+        let context = try makeContext()
+        let staleEntity = LastLocationEntity(
+            latitude: -23.5505,
+            longitude: -46.6333,
+            updatedAt: .distantPast
+        )
+        context.modelContext.insert(staleEntity)
+        try context.modelContext.save()
+
+        try await context.locationRepository.saveLastLocation(
+            UserLocation(latitude: 40.7128, longitude: -74.0060)
+        )
+
+        let entities = try context.modelContext.fetch(FetchDescriptor<LastLocationEntity>())
+        #expect(entities.count == 1)
+        #expect(entities.first?.updatedAt != .distantPast)
+    }
+
+    @Test
+    func locationRepositoryFetchesNilWhenNoLocationWasSaved() async throws {
+        let context = try makeContext()
+
+        #expect(try await context.locationRepository.fetchLastLocation() == nil)
+    }
+
+    @Test
+    func locationRepositoryFetchesPreviouslySavedLocation() async throws {
+        let context = try makeContext()
+        let location = UserLocation(latitude: -23.5505, longitude: -46.6333)
+
+        try await context.locationRepository.saveLastLocation(location)
+
+        #expect(try await context.locationRepository.fetchLastLocation() == location)
+    }
+
+    @Test
+    func locationRepositoryFetchesMostRecentlyUpdatedLocation() async throws {
+        let context = try makeContext()
+        context.modelContext.insert(LastLocationEntity(
+            latitude: 1,
+            longitude: 1,
+            updatedAt: .distantPast
+        ))
+        context.modelContext.insert(LastLocationEntity(
+            latitude: -23.5505,
+            longitude: -46.6333,
+            updatedAt: .now
+        ))
+        try context.modelContext.save()
+
+        let result = try await context.locationRepository.fetchLastLocation()
+
+        #expect(result == UserLocation(latitude: -23.5505, longitude: -46.6333))
+    }
+
+    @Test
+    func locationRepositoryDeletesEveryPersistedLocation() async throws {
+        let context = try makeContext()
+        context.modelContext.insert(LastLocationEntity(latitude: 1, longitude: 1))
+        context.modelContext.insert(LastLocationEntity(latitude: 2, longitude: 2))
+        try context.modelContext.save()
+
+        try await context.locationRepository.deleteLastLocation()
+
+        let entities = try context.modelContext.fetch(FetchDescriptor<LastLocationEntity>())
+        #expect(entities.isEmpty)
+        #expect(try await context.locationRepository.fetchLastLocation() == nil)
+    }
+
+    @Test
+    func locationRepositoryDeleteIsANoOpWhenNothingWasSaved() async throws {
+        let context = try makeContext()
+
+        try await context.locationRepository.deleteLastLocation()
+
+        #expect(try await context.locationRepository.fetchLastLocation() == nil)
     }
 
     private func makeContext() throws -> Context {

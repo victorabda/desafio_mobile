@@ -7,12 +7,19 @@
 
 import Foundation
 
+/// Launch-argument-driven scenarios that make XCUITests deterministic: each
+/// case selects a fixed dependency graph (fakes below) so E2E runs never
+/// depend on network, Firebase, or real GPS. Compiled out of Release builds.
 enum UITestScenario: String {
     case loginSuccess = "-ui-testing-login-success"
     case loginFailure = "-ui-testing-login-failure"
     case homeSuccess = "-ui-testing-home-success"
     case homePermissionDenied = "-ui-testing-home-permission-denied"
     case homeFailure = "-ui-testing-home-failure"
+    /// GPS permission denied, but a previously saved location exists in the repository.
+    case homeStaleLocationPermissionDenied = "-ui-testing-home-stale-permission-denied"
+    /// GPS unavailable (generic failure), but a previously saved location exists.
+    case homeStaleLocationUnavailable = "-ui-testing-home-stale-unavailable"
 
     static var current: UITestScenario? {
 #if DEBUG
@@ -90,7 +97,18 @@ final class UITestLocationService: LocationService {
 
 @MainActor
 final class UITestLocationRepository: LocationRepository {
+    /// Pre-seeded location returned by `fetchLastLocation`, modelling the case
+    /// where the user previously visited the Home screen and the position was
+    /// persisted. `nil` simulates a first-launch with no saved data.
+    private let savedLocation: UserLocation?
+
+    init(savedLocation: UserLocation? = nil) {
+        self.savedLocation = savedLocation
+    }
+
     func saveLastLocation(_ location: UserLocation) async throws {}
+    func fetchLastLocation() async throws -> UserLocation? { savedLocation }
+    func deleteLastLocation() async throws {}
 }
 
 @MainActor

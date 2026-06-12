@@ -3,236 +3,642 @@
   "strings" : {
     "common.cancel" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
       }
     },
     "common.logout" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Log out" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Sair" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log out"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sair"
+          }
+        }
       }
     },
     "common.ok" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "OK" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
       }
     },
     "common.retry" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try again" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Tentar novamente" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tentar novamente"
+          }
+        }
       }
     },
     "common.user" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "User" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Usuário" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuário"
+          }
+        }
       }
     },
     "home.error.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to load the map" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Não foi possível carregar o mapa" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load the map"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar o mapa"
+          }
+        }
       }
     },
     "home.greeting" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hello," } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Olá," } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hello,"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olá,"
+          }
+        }
       }
     },
     "home.loading.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "This should only take a few seconds." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Isso deve levar apenas alguns segundos." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This should only take a few seconds."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isso deve levar apenas alguns segundos."
+          }
+        }
       }
     },
     "home.loading.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Finding your location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Buscando sua localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finding your location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando sua localização"
+          }
+        }
       }
     },
     "home.location.error" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to load your location." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Não foi possível carregar sua localização." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load your location."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar sua localização."
+          }
+        }
       }
     },
     "home.logout.confirmation" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Do you want to log out?" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Deseja sair da sua conta?" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you want to log out?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deseja sair da sua conta?"
+          }
+        }
       }
     },
     "home.logout.error.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to log out of your account." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Não foi possível sair da sua conta." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to log out of your account."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível sair da sua conta."
+          }
+        }
       }
     },
     "home.logout.error.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Logout error" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Erro ao sair" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout error"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro ao sair"
+          }
+        }
+      }
+    },
+    "home.stale_location.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Showing your last saved location. It may be outdated."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exibindo sua última localização salva. Ela pode estar desatualizada."
+          }
+        }
       }
     },
     "location.permission.denied" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location permission denied." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Permissão de localização negada." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location permission denied."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permissão de localização negada."
+          }
+        }
       }
     },
     "location.unavailable" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location unavailable." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Localização indisponível." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location unavailable."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localização indisponível."
+          }
+        }
       }
     },
     "login.copyright" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Developed by **Victor Augusto Borges Dias de Almeida** for the ByCoders senior iOS developer challenge." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Desenvolvido por **Victor Augusto Borges Dias de Almeida**, teste de desenvolvedor iOS sênior para a empresa ByCoders." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Developed by **Victor Augusto Borges Dias de Almeida** for the ByCoders iOS developer challenge."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desenvolvido por **Victor Augusto Borges Dias de Almeida**, teste de desenvolvedor iOS para a empresa ByCoders."
+          }
+        }
       }
     },
     "login.description" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign in to view your current position on the map and keep your last location saved on this device." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Entre para visualizar sua posição atual no mapa e manter sua última localização salva no dispositivo." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to view your current position on the map and keep your last location saved on this device."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entre para visualizar sua posição atual no mapa e manter sua última localização salva no dispositivo."
+          }
+        }
       }
     },
     "login.email" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Email" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        }
       }
     },
     "login.error" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to sign in." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Não foi possível realizar o login." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to sign in."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível realizar o login."
+          }
+        }
       }
     },
     "login.instructions" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Use your email and password to continue." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Use seu email e senha para continuar." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your email and password to continue."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use seu email e senha para continuar."
+          }
+        }
       }
     },
     "login.password" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Password" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Senha" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senha"
+          }
+        }
       }
     },
     "login.password.hide" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hide password" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Ocultar senha" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide password"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar senha"
+          }
+        }
       }
     },
     "login.password.show" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show password" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Exibir senha" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show password"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exibir senha"
+          }
+        }
       }
     },
     "login.privacy" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your sign-in data is protected by Firebase Authentication." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Seus dados de acesso são protegidos pelo Firebase Authentication." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sign-in data is protected by Firebase Authentication."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus dados de acesso são protegidos pelo Firebase Authentication."
+          }
+        }
       }
     },
     "login.sign_in" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign in" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Entrar" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar"
+          }
+        }
       }
     },
     "login.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "My Location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Minha Localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minha Localização"
+          }
+        }
       }
     },
     "login.welcome" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Boas-vindas" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boas-vindas"
+          }
+        }
       }
     },
     "map.recenter" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Return to my location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Voltar para minha localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return to my location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voltar para minha localização"
+          }
+        }
       }
     },
     "map.user_location" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Sua localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua localização"
+          }
+        }
       }
     },
     "permission.description" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Location access is used only to find your current position and display it on the map." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "A localização é usada somente para encontrar sua posição atual e exibi-la no mapa." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location access is used only to find your current position and display it on the map."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A localização é usada somente para encontrar sua posição atual e exibi-la no mapa."
+          }
+        }
       }
     },
     "permission.open_settings" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow in Settings" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Permitir nos Ajustes" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow in Settings"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitir nos Ajustes"
+          }
+        }
       }
     },
     "permission.privacy.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can remove this permission at any time." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Você pode remover essa permissão a qualquer momento." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can remove this permission at any time."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode remover essa permissão a qualquer momento."
+          }
+        }
       }
     },
     "permission.privacy.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Respect your privacy" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Respeitar sua privacidade" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respect your privacy"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Respeitar sua privacidade"
+          }
+        }
       }
     },
     "permission.save_location.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your last position is stored locally on this device." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Sua última posição fica armazenada localmente no dispositivo." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your last position is stored locally on this device."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua última posição fica armazenada localmente no dispositivo."
+          }
+        }
       }
     },
     "permission.save_location.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save the last location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Salvar a última localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save the last location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvar a última localização"
+          }
+        }
       }
     },
     "permission.show_position.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "The map is centered on your current position." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Centralizamos o mapa no ponto em que você está." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The map is centered on your current position."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Centralizamos o mapa no ponto em que você está."
+          }
+        }
       }
     },
     "permission.show_position.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show your position" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Mostrar sua posição" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show your position"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar sua posição"
+          }
+        }
       }
     },
     "permission.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "We need your location" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Precisamos da sua localização" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We need your location"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precisamos da sua localização"
+          }
+        }
       }
     },
     "session.restoring" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restoring session..." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Restaurando sessão..." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restoring session..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurando sessão..."
+          }
+        }
       }
     }
   },

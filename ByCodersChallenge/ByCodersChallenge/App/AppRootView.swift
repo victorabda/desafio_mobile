@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// Root navigation driven purely by the global `AuthState`: there is no
+/// imperative routing — login/home transitions happen by observing the
+/// session store, keeping navigation a function of state.
 struct AppRootView: View {
     @ObservedObject var session: AppSession
     let container: AppContainer

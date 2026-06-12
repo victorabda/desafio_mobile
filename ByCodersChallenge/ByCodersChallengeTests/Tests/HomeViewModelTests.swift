@@ -34,6 +34,19 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func permissionDeniedFallsBackToLastSavedLocationAsStale() async {
+        let context = makeSUT()
+        context.locationService.result = .failure(LocationError.permissionDenied)
+        context.locationRepository.fetchLastLocationResult = .success(.fixture)
+
+        await context.sut.load()
+
+        #expect(context.sut.state == .staleLocation(.fixture, reason: .permissionDenied))
+        #expect(context.analytics.trackedEvents.isEmpty)
+        #expect(context.crashlytics.recordedErrors.isEmpty)
+    }
+
+    @Test
     func locationFailureShowsErrorAndRecordsCrashlytics() async {
         let context = makeSUT()
         context.locationService.result = .failure(TestError.expected)
@@ -44,6 +57,42 @@ struct HomeViewModelTests {
         #expect(context.crashlytics.recordedErrors.count == 1)
         #expect(context.crashlytics.recordedContexts.first?["screen"] == "home")
         #expect(context.crashlytics.recordedContexts.first?["action"] == "load_current_location")
+    }
+
+    @Test
+    func locationFailureFallsBackToLastSavedLocationAsStale() async {
+        let context = makeSUT()
+        context.locationService.result = .failure(TestError.expected)
+        context.locationRepository.fetchLastLocationResult = .success(.fixture)
+
+        await context.sut.load()
+
+        #expect(context.sut.state == .staleLocation(.fixture, reason: .locationUnavailable))
+        #expect(context.crashlytics.recordedErrors.count == 1)
+        #expect(context.crashlytics.recordedContexts.first?["action"] == "load_current_location")
+    }
+
+    @Test
+    func fallbackFetchFailureShowsErrorAndRecordsBothErrors() async {
+        let context = makeSUT()
+        context.locationService.result = .failure(TestError.expected)
+        context.locationRepository.fetchLastLocationResult = .failure(TestError.expected)
+
+        await context.sut.load()
+
+        #expect(context.sut.state == .failed(L10n.locationLoadError))
+        #expect(context.crashlytics.recordedErrors.count == 2)
+        #expect(context.crashlytics.recordedContexts.last?["action"] == "fetch_last_location")
+    }
+
+    @Test
+    func successfulLoadDoesNotFetchLastSavedLocation() async {
+        let context = makeSUT()
+
+        await context.sut.load()
+
+        #expect(context.locationRepository.fetchLastLocationCallCount == 0)
+        #expect(context.sut.state == .loaded(.fixture))
     }
 
     @Test
@@ -59,13 +108,14 @@ struct HomeViewModelTests {
     }
 
     @Test
-    func successfulLogoutSignsOutDeletesUserAndUpdatesSession() async {
+    func successfulLogoutSignsOutDeletesLocalDataAndUpdatesSession() async {
         let context = makeSUT()
 
         await context.sut.logout()
 
         #expect(context.auth.signOutCallCount == 1)
         #expect(context.userRepository.deleteCallCount == 1)
+        #expect(context.locationRepository.deleteCallCount == 1)
         #expect(context.session.currentUser == nil)
         #expect(!context.sut.isLoggingOut)
         #expect(context.sut.logoutErrorMessage == nil)
@@ -93,6 +143,22 @@ struct HomeViewModelTests {
 
         #expect(context.auth.signOutCallCount == 1)
         #expect(context.userRepository.deleteCallCount == 1)
+        #expect(context.locationRepository.deleteCallCount == 0)
+        #expect(context.session.currentUser == .fixture)
+        #expect(context.sut.logoutErrorMessage == L10n.logoutError)
+        #expect(context.crashlytics.recordedContexts.first?["action"] == "logout")
+    }
+
+    @Test
+    func locationDeletionFailureKeepsSessionAndRecordsCrashlytics() async {
+        let context = makeSUT()
+        context.locationRepository.deleteError = TestError.expected
+
+        await context.sut.logout()
+
+        #expect(context.auth.signOutCallCount == 1)
+        #expect(context.userRepository.deleteCallCount == 1)
+        #expect(context.locationRepository.deleteCallCount == 1)
         #expect(context.session.currentUser == .fixture)
         #expect(context.sut.logoutErrorMessage == L10n.logoutError)
         #expect(context.crashlytics.recordedContexts.first?["action"] == "logout")

@@ -39,6 +39,10 @@ final class LoginViewModel: ObservableObject {
         LoginCredentials(email: email, password: password).isValid && !isLoading
     }
 
+    /// Authenticates, persists the user locally and only then publishes the
+    /// logged-in session — guaranteeing that whenever the app shows Home, the
+    /// user is also recoverable offline on the next launch. The success
+    /// analytics event is tracked after the whole flow commits.
     func login() async {
         guard isLoginButtonEnabled else { return }
 

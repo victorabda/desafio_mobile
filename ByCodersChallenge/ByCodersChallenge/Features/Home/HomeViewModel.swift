@@ -10,11 +10,24 @@ import SwiftUI
 
 @MainActor
 final class HomeViewModel: ObservableObject {
+    /// Finite states the Home screen can render. Modeling them as an enum
+    /// (instead of independent booleans) makes invalid combinations such as
+    /// "loading + error" unrepresentable.
     enum State: Equatable {
         case loading
         case loaded(UserLocation)
+        /// GPS could not be read, but a previously persisted location exists.
+        /// The map is still shown, flagged as potentially outdated.
+        case staleLocation(UserLocation, reason: StaleLocationReason)
         case permissionDenied
         case failed(String)
+    }
+
+    /// Why the displayed location is stale — drives the recovery action the
+    /// banner offers (open Settings vs. retry).
+    enum StaleLocationReason: Equatable {
+        case permissionDenied
+        case locationUnavailable
     }
 
     @Published private(set) var state: State = .loading
@@ -53,6 +66,10 @@ final class HomeViewModel: ObservableObject {
             ?? L10n.genericUser
     }
 
+    /// Loads the current position, persists it as the new "last location" and
+    /// tracks the `home_rendered` event. When the GPS read fails, the last
+    /// persisted location is used as a degraded-but-useful fallback; only
+    /// when there is nothing saved do we surface the blocking error states.
     func load() async {
         state = .loading
 
@@ -72,17 +89,45 @@ final class HomeViewModel: ObservableObject {
 
             state = .loaded(location)
         } catch LocationError.permissionDenied {
-            state = .permissionDenied
+            if let lastLocation = await fetchLastSavedLocation() {
+                state = .staleLocation(lastLocation, reason: .permissionDenied)
+            } else {
+                state = .permissionDenied
+            }
         } catch {
-            state = .failed(L10n.locationLoadError)
-
             crashlyticsService.record(error: error, context: [
                 "screen": "home",
                 "action": "load_current_location"
             ])
+
+            if let lastLocation = await fetchLastSavedLocation() {
+                state = .staleLocation(lastLocation, reason: .locationUnavailable)
+            } else {
+                state = .failed(L10n.locationLoadError)
+            }
         }
     }
 
+    /// Best-effort read of the persisted location: a failure here must not
+    /// mask the original GPS error, so it is only reported to Crashlytics
+    /// and treated as "no fallback available".
+    private func fetchLastSavedLocation() async -> UserLocation? {
+        do {
+            return try await locationRepository.fetchLastLocation()
+        } catch {
+            crashlyticsService.record(error: error, context: [
+                "screen": "home",
+                "action": "fetch_last_location"
+            ])
+            return nil
+        }
+    }
+
+    /// Signs out remotely first, then clears the persisted user and the last
+    /// saved location (personal data must not outlive the session); the
+    /// session is only flipped to logged-out after every step succeeds, so a
+    /// failure leaves the user signed in with a visible error instead of a
+    /// half-cleared state.
     func logout() async {
         guard !isLoggingOut else { return }
 
@@ -92,6 +137,7 @@ final class HomeViewModel: ObservableObject {
         do {
             try authService.signOut()
             try await userRepository.deleteLoggedUser()
+            try await locationRepository.deleteLastLocation()
             session.setLoggedOut()
         } catch {
             logoutErrorMessage = L10n.logoutError

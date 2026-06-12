@@ -9,12 +9,8 @@ import FirebaseCrashlytics
 
 final class FirebaseCrashlyticsService: CrashlyticsService {
     func record(error: Error, context: [String: String]) {
-        let crashlytics = Crashlytics.crashlytics()
-
-        context.forEach { key, value in
-            crashlytics.setCustomValue(value, forKey: key)
-        }
-
-        crashlytics.record(error: error)
+        // userInfo attaches the keys to this event only; setCustomValue would
+        // leak the context into every report recorded later in the session.
+        Crashlytics.crashlytics().record(error: error, userInfo: context)
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @StateObject var viewModel: HomeViewModel
     @State private var isShowingLogoutConfirmation = false
 
@@ -31,6 +32,14 @@ struct HomeView: View {
                 UserLocationMapView(location: location)
                     .ignoresSafeArea(edges: .bottom)
                     .accessibilityIdentifier("home_map")
+
+            case let .staleLocation(location, reason):
+                UserLocationMapView(location: location)
+                    .ignoresSafeArea(edges: .bottom)
+                    .accessibilityIdentifier("home_map")
+                    .overlay(alignment: .top) {
+                        staleLocationBanner(reason: reason)
+                    }
 
             case .permissionDenied:
                 locationPermissionView
@@ -59,7 +68,7 @@ struct HomeView: View {
             await viewModel.load()
         }
         .onChange(of: scenePhase) { _, newPhase in
-            guard newPhase == .active, viewModel.state == .permissionDenied else { return }
+            guard newPhase == .active, shouldReloadOnForeground else { return }
 
             Task {
                 await viewModel.load()
@@ -92,11 +101,65 @@ struct HomeView: View {
         }
     }
 
+    /// Permission-blocked states are retried when the app returns to the
+    /// foreground, since the user may have just granted access in Settings.
+    private var shouldReloadOnForeground: Bool {
+        switch viewModel.state {
+        case .permissionDenied, .staleLocation(_, reason: .permissionDenied):
+            true
+        default:
+            false
+        }
+    }
+
+    /// Shown over the map when displaying a persisted (possibly outdated)
+    /// location; the action adapts to the failure that caused the fallback.
+    private func staleLocationBanner(reason: HomeViewModel.StaleLocationReason) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "clock.arrow.circlepath")
+                .font(.title3)
+                .foregroundStyle(.brandWarning)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("home.stale_location.message")
+                    .font(.subheadline)
+
+                if reason == .permissionDenied {
+                    Button {
+                        openSettings()
+                    } label: {
+                        Label("permission.open_settings", systemImage: "gear")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .accessibilityIdentifier("home_stale_open_settings_button")
+                } else {
+                    Button("common.retry") {
+                        Task {
+                            await viewModel.load()
+                        }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .accessibilityIdentifier("home_stale_retry_button")
+                }
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding()
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .frame(maxWidth: 560)
+        .padding()
+        // `children: .contain` keeps the banner as a queryable container
+        // without propagating its identifier over the buttons' own ones.
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("home_stale_location_banner")
+    }
+
     private var userHeader: some View {
         HStack(spacing: 12) {
             Image(systemName: "person.crop.circle.fill")
                 .font(.largeTitle)
-                .foregroundStyle(.blue)
+                .foregroundStyle(.brandPrimary)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("home.greeting")
@@ -131,61 +194,118 @@ struct HomeView: View {
 
     private var locationPermissionView: some View {
         ScrollView {
-            VStack(spacing: 24) {
-                ZStack {
-                    Circle()
-                        .fill(.blue.opacity(0.12))
-                        .frame(width: 120, height: 120)
+            Group {
+                if horizontalSizeClass == .regular {
+                    HStack(alignment: .center, spacing: 64) {
+                        permissionIntroduction
+                            .frame(maxWidth: 380)
 
-                    Image(systemName: "map.fill")
-                        .font(.system(size: 52))
-                        .foregroundStyle(.blue)
+                        VStack(spacing: 28) {
+                            permissionBenefits
+                            openSettingsButton
+                        }
+                        .frame(maxWidth: 520)
+                    }
+                } else {
+                    VStack(spacing: 24) {
+                        permissionIntroduction
+                        permissionBenefits
+                        openSettingsButton
+                    }
                 }
-
-                VStack(spacing: 8) {
-                    Text("permission.title")
-                        .font(.title2.bold())
-                        .multilineTextAlignment(.center)
-
-                    Text("permission.description")
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    permissionBenefit(
-                        icon: "mappin.and.ellipse",
-                        title: "permission.show_position.title",
-                        message: "permission.show_position.message"
-                    )
-
-                    permissionBenefit(
-                        icon: "externaldrive.fill",
-                        title: "permission.save_location.title",
-                        message: "permission.save_location.message"
-                    )
-
-                    permissionBenefit(
-                        icon: "lock.shield.fill",
-                        title: "permission.privacy.title",
-                        message: "permission.privacy.message"
-                    )
-                }
-                .padding()
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20))
-
-                Button {
-                    openSettings()
-                } label: {
-                    Label("permission.open_settings", systemImage: "gear")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .accessibilityIdentifier("home_open_settings_button")
             }
-            .padding(24)
+            .frame(maxWidth: 1040)
+            .padding(.horizontal, horizontalSizeClass == .regular ? 48 : 24)
+            .padding(.vertical, horizontalSizeClass == .regular ? 64 : 24)
+            .frame(maxWidth: .infinity)
         }
+        .background(permissionBackground)
+    }
+
+    private var permissionIntroduction: some View {
+        VStack(spacing: horizontalSizeClass == .regular ? 24 : 16) {
+            ZStack {
+                Circle()
+                    .fill(Color.brandPrimary.opacity(0.12))
+                    .frame(
+                        width: horizontalSizeClass == .regular ? 176 : 120,
+                        height: horizontalSizeClass == .regular ? 176 : 120
+                    )
+
+                Image(systemName: "map.fill")
+                    .font(.system(size: horizontalSizeClass == .regular ? 76 : 52))
+                    .foregroundStyle(.brandPrimary)
+            }
+
+            VStack(spacing: horizontalSizeClass == .regular ? 12 : 8) {
+                Text("permission.title")
+                    .font(horizontalSizeClass == .regular ? .system(size: 40, weight: .bold) : .title2.bold())
+                    .multilineTextAlignment(.center)
+
+                Text("permission.description")
+                    .font(horizontalSizeClass == .regular ? .title3 : .body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private var permissionBenefits: some View {
+        VStack(alignment: .leading, spacing: horizontalSizeClass == .regular ? 24 : 16) {
+            permissionBenefit(
+                icon: "mappin.and.ellipse",
+                title: "permission.show_position.title",
+                message: "permission.show_position.message"
+            )
+
+            Divider()
+
+            permissionBenefit(
+                icon: "externaldrive.fill",
+                title: "permission.save_location.title",
+                message: "permission.save_location.message"
+            )
+
+            Divider()
+
+            permissionBenefit(
+                icon: "lock.shield.fill",
+                title: "permission.privacy.title",
+                message: "permission.privacy.message"
+            )
+        }
+        .padding(horizontalSizeClass == .regular ? 32 : 20)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(.primary.opacity(0.08))
+        }
+    }
+
+    private var openSettingsButton: some View {
+        Button {
+            openSettings()
+        } label: {
+            Label("permission.open_settings", systemImage: "gear")
+                .fontWeight(.semibold)
+                .frame(maxWidth: horizontalSizeClass == .regular ? 280 : .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .accessibilityIdentifier("home_open_settings_button")
+    }
+
+    private var permissionBackground: some View {
+        LinearGradient(
+            colors: [
+                Color.brandPrimary.opacity(0.08),
+                Color(.systemBackground)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
     }
 
     private func permissionBenefit(
@@ -193,18 +313,18 @@ struct HomeView: View {
         title: LocalizedStringKey,
         message: LocalizedStringKey
     ) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: horizontalSizeClass == .regular ? 18 : 12) {
             Image(systemName: icon)
-                .font(.title3)
-                .foregroundStyle(.blue)
-                .frame(width: 28)
+                .font(horizontalSizeClass == .regular ? .title2 : .title3)
+                .foregroundStyle(.brandPrimary)
+                .frame(width: horizontalSizeClass == .regular ? 38 : 28)
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: horizontalSizeClass == .regular ? 6 : 3) {
                 Text(title)
-                    .font(.headline)
+                    .font(horizontalSizeClass == .regular ? .title3.weight(.semibold) : .headline)
 
                 Text(message)
-                    .font(.subheadline)
+                    .font(horizontalSizeClass == .regular ? .body : .subheadline)
                     .foregroundStyle(.secondary)
             }
         }
@@ -235,5 +355,12 @@ struct HomeView: View {
 #Preview("Home") {
     NavigationStack {
         HomeView(viewModel: PreviewFactory.makeHomeViewModel())
+    }
+}
+
+#Preview("Permission Denied - iPad", traits: .fixedLayout(width: 1180, height: 820)) {
+    NavigationStack {
+        HomeView(viewModel: PreviewFactory.makePermissionDeniedHomeViewModel())
+            .environment(\.horizontalSizeClass, .regular)
     }
 }

@@ -5,6 +5,9 @@
 //  Created by Victor Almeida on 11/06/26.
 //
 
+/// Catalog of every analytics event the app emits. Centralizing names and
+/// parameters here keeps the tracking contract reviewable in one place and
+/// typo-proof at call sites.
 enum AnalyticsEvent {
     case loginSuccess(userId: String, provider: String)
     case homeRendered(userId: String, latitude: Double, longitude: Double)

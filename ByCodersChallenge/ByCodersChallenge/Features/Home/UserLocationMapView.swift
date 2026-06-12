@@ -9,6 +9,9 @@ import CoreLocation
 import MapKit
 import SwiftUI
 
+/// MapKit view centered on the user's position. Tracks camera movement to
+/// offer a "recenter" affordance only after the user pans away, instead of
+/// fighting their gestures by force-recentering.
 struct UserLocationMapView: View {
     let location: UserLocation
 
@@ -23,7 +26,7 @@ struct UserLocationMapView: View {
     var body: some View {
         Map(position: $position) {
             Marker("map.user_location", coordinate: coordinate)
-                .tint(.blue)
+                .tint(.brandPrimary)
         }
         .mapStyle(.standard(elevation: .realistic))
         .mapControls {
@@ -40,6 +43,7 @@ struct UserLocationMapView: View {
                 longitude: location.longitude
             )
 
+            // 75m threshold avoids flashing the recenter button on tiny pans.
             hasMovedAway = center.distance(from: userLocation) > 75
         }
         .overlay(alignment: .bottomTrailing) {
