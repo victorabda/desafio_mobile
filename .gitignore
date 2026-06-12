@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+
+# Build artifacts
+DerivedData/
+build/
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Swift Package Manager local artifacts
+.build/
+.swiftpm/
+
+# Logs and temporary files
+*.log
+*.tmp
+
