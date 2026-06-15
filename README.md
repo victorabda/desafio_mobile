@@ -83,9 +83,9 @@ xcodebuild build \
 
 The project uses `FirebaseAuth`, `FirebaseAnalytics`, and `FirebaseCrashlytics`.
 
-The committed `GoogleService-Info.plist` belongs exclusively to the challenge's demonstration environment. It is intentionally versioned so evaluators can run the app without manual Firebase configuration. It contains client configuration identifiers and keys, but does not grant administrative access to Firebase.
+> **Note for evaluators:** `GoogleService-Info.plist` is committed to this repository on purpose, exclusively for this take-home challenge, so the project builds and runs immediately without any manual Firebase setup. It only contains client configuration identifiers and keys and does not grant administrative access to Firebase. **This is not how a real production project would be set up** — see below.
 
-For a production app, use separate Firebase projects for development, staging, and production; restrict enabled resources and authentication methods; never reuse real credentials or data; and never commit service-account keys or administrative credentials.
+For a production app, use separate Firebase projects for development, staging, and production; restrict enabled resources and authentication methods; never reuse real credentials or data; never commit `GoogleService-Info.plist` (add it to `.gitignore` and distribute it through a secrets manager or CI variables instead); and never commit service-account keys or administrative credentials.
 
 ### Architecture and persistence
 
@@ -197,9 +197,9 @@ xcodebuild build \
 
 O projeto utiliza `FirebaseAuth`, `FirebaseAnalytics` e `FirebaseCrashlytics`.
 
-O `GoogleService-Info.plist` versionado pertence exclusivamente ao ambiente de demonstração do desafio. Ele foi incluído intencionalmente para permitir que os avaliadores executem o app sem configuração manual do Firebase. O arquivo contém identificadores e chaves de configuração do cliente, mas não concede acesso administrativo ao Firebase.
+> **Nota para o avaliador:** o `GoogleService-Info.plist` foi versionado de propósito, exclusivamente para este teste/desafio, para que o projeto compile e rode imediatamente sem nenhuma configuração manual do Firebase. Ele contém apenas identificadores e chaves de configuração do cliente e não concede acesso administrativo ao Firebase. **Em um ambiente de produção isso seria feito de outra forma** — veja abaixo.
 
-Em um aplicativo de produção, utilize projetos Firebase separados para desenvolvimento, homologação e produção; restrinja os recursos e métodos de autenticação habilitados; nunca reutilize dados ou credenciais reais; e nunca versione service-account keys ou credenciais administrativas.
+Em um aplicativo de produção, utilize projetos Firebase separados para desenvolvimento, homologação e produção; restrinja os recursos e métodos de autenticação habilitados; nunca reutilize dados ou credenciais reais; nunca versione o `GoogleService-Info.plist` (adicione-o ao `.gitignore` e distribua-o via um gerenciador de segredos ou variáveis de CI); e nunca versione service-account keys ou credenciais administrativas.
 
 ### Arquitetura e persistência
 
